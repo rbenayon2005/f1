@@ -1,6 +1,6 @@
 # F1 - Resultados y calendario
 
-Script en Python que consulta la API pública [OpenF1](https://openf1.org/) para mostrar el calendario de la temporada de Fórmula 1 en curso y los resultados de cada carrera.
+Script en Python que consulta la API pública [Jolpica-F1 / Ergast](https://api.jolpi.ca/ergast/) para mostrar el calendario de la temporada de Fórmula 1 y los resultados de cada carrera.
 
 ## Instalación
 
@@ -21,7 +21,7 @@ Sin parámetros, muestra el resultado de la última carrera ya finalizada del a�
 
 ```bash
 source venv/bin/activate
-python3 f1.py
+python3 efeuno.py
 ```
 
 ### Calendario de la temporada
@@ -30,36 +30,37 @@ Con el parámetro `circuitos`, muestra el calendario completo del año en curso:
 
 ```bash
 source venv/bin/activate
-python3 f1.py circuitos
+python3 efeuno.py circuitos
 ```
 
 Para ver el calendario de un año específico, añade el año como segundo parámetro:
 
 ```bash
 source venv/bin/activate
-python3 f1.py circuitos 2024
-python3 f1.py circuitos 2023
+python3 efeuno.py circuitos 2024
+python3 efeuno.py circuitos 1999
 ```
 
 ### Resultado de una carrera puntual
 
-Pasando el nombre de un circuito, Gran Premio, ubicación o país (tal como figura en el listado de `circuitos`), muestra el resultado de esa carrera puntual del año en curso. Si todavía no se corrió, informa la fecha programada en lugar de un resultado.
+Pasando el nombre de un circuito, Gran Premio, ubicación o país (tal como figura en el listado de `circuitos`), muestra el resultado de esa carrera puntual. Si todavía no se corrió, informa la fecha programada en lugar de un resultado.
 
 ```bash
 source venv/bin/activate
-python3 f1.py "belgian"
-python3 f1.py "hungaroring"
+python3 efeuno.py "belgian"
+python3 efeuno.py "hungaroring"
+python3 efeuno.py "imola" 1999
 ```
 
 Para buscar en un año específico, añade el año como segundo parámetro:
 
 ```bash
 source venv/bin/activate
-python3 f1.py "belgian" 2024
-python3 f1.py "hungaroring" 2023
+python3 efeuno.py "belgian" 2024
+python3 efeuno.py "imola" 1999
 ```
 
-**Nota:** La API OpenF1 tiene datos históricos disponibles desde la temporada 2023 en adelante.
+**Nota:** La API Jolpica-F1 tiene cobertura histórica mucho más amplia y permite consultar temporadas desde 1950 en adelante.
 
 La búsqueda no distingue mayúsculas/minúsculas y admite coincidencias parciales.
 
