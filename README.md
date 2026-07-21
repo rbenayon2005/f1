@@ -33,6 +33,14 @@ source venv/bin/activate
 python3 f1.py circuitos
 ```
 
+Para ver el calendario de un año específico, añade el año como segundo parámetro:
+
+```bash
+source venv/bin/activate
+python3 f1.py circuitos 2010
+python3 f1.py circuitos 2020
+```
+
 ### Resultado de una carrera puntual
 
 Pasando el nombre de un circuito, Gran Premio, ubicación o país (tal como figura en el listado de `circuitos`), muestra el resultado de esa carrera puntual del año en curso. Si todavía no se corrió, informa la fecha programada en lugar de un resultado.
@@ -41,6 +49,14 @@ Pasando el nombre de un circuito, Gran Premio, ubicación o país (tal como figu
 source venv/bin/activate
 python3 f1.py "belgian"
 python3 f1.py "hungaroring"
+```
+
+Para buscar en un año específico, añade el año como segundo parámetro:
+
+```bash
+source venv/bin/activate
+python3 f1.py "belgian" 2010
+python3 f1.py "hungaroring" 2015
 ```
 
 La búsqueda no distingue mayúsculas/minúsculas y admite coincidencias parciales.

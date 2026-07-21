@@ -104,6 +104,14 @@ def mostrar_resultado_carrera(session_key, etiqueta):
 def main():
     year = pd.Timestamp.now().year
     argumento = sys.argv[1] if len(sys.argv) > 1 else None
+    year_arg = sys.argv[2] if len(sys.argv) > 2 else None
+
+    # Si se proporciona un año como segundo argumento, usarlo
+    if year_arg:
+        try:
+            year = int(year_arg)
+        except ValueError:
+            raise Exception(f"El año '{year_arg}' no es válido")
 
     if argumento == 'circuitos':
         df_temporada = obtener_temporada(year)
