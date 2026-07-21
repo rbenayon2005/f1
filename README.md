@@ -37,8 +37,8 @@ Para ver el calendario de un año específico, añade el año como segundo pará
 
 ```bash
 source venv/bin/activate
-python3 f1.py circuitos 2010
-python3 f1.py circuitos 2020
+python3 f1.py circuitos 2024
+python3 f1.py circuitos 2023
 ```
 
 ### Resultado de una carrera puntual
@@ -55,9 +55,11 @@ Para buscar en un año específico, añade el año como segundo parámetro:
 
 ```bash
 source venv/bin/activate
-python3 f1.py "belgian" 2010
-python3 f1.py "hungaroring" 2015
+python3 f1.py "belgian" 2024
+python3 f1.py "hungaroring" 2023
 ```
+
+**Nota:** La API OpenF1 tiene datos históricos disponibles desde la temporada 2023 en adelante.
 
 La búsqueda no distingue mayúsculas/minúsculas y admite coincidencias parciales.
 
