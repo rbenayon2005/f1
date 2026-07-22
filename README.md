@@ -64,6 +64,21 @@ python3 efeuno.py "imola" 1999
 
 La búsqueda no distingue mayúsculas/minúsculas y admite coincidencias parciales.
 
+### Posiciones de un piloto
+
+Si el primer parámetro no coincide con ningún circuito, se interpreta como el nombre o apellido de un piloto y se muestran sus resultados carrera por carrera.
+
+```bash
+source venv/bin/activate
+python3 efeuno.py "Alonso"        # temporada actual
+python3 efeuno.py "Alonso" 2012   # una temporada puntual
+python3 efeuno.py "Alonso" all    # toda su carrera
+```
+
+Si no se indica año, se intenta primero con la temporada actual; si el piloto no corrió ese año (por ejemplo, un piloto retirado como "Fangio"), se muestra automáticamente toda su carrera. Si se indica un año puntual y el piloto no corrió ese año, se informa el error en lugar de mostrar otra temporada.
+
+Si la búsqueda coincide con más de un piloto (por ejemplo "Verstappen", que coincide con Jos y con Max), se listan las coincidencias para que se pueda repetir la búsqueda con un dato más específico (nombre completo, código de 3 letras o driverId).
+
 ## Qué muestra el resultado de una carrera
 
 Para cada carrera se listan los pilotos ordenados por posición final, con:
@@ -74,3 +89,37 @@ Para cada carrera se listan los pilotos ordenados por posición final, con:
 - **Escudería**: equipo
 - **Salida**: posición de largada
 - **Cambio**: variación de posiciones entre la largada y la llegada (▲ subió, ▼ bajó, `=` sin cambios)
+
+## Qué muestra la búsqueda de un piloto
+
+Para cada carrera del piloto se lista, ordenado por temporada y ronda:
+
+- **Año** / **Ronda**: temporada y número de carrera dentro de esa temporada
+- **Gran Premio**: nombre de la carrera
+- **Fecha**: fecha de la carrera
+- **Salida** / **Final**: posición de largada y posición final
+- **Escudería**: equipo con el que corrió esa carrera
+
+## Solución de problemas
+
+**`ModuleNotFoundError: No module named 'requests'` (o `pandas`)**
+
+Significa que el entorno virtual activo no tiene las dependencias instaladas, o que la terminal quedó con un entorno activado que ya no existe (por ejemplo, si se borró la carpeta `venv/` o `.venv/` mientras estaba activada). Solución:
+
+```bash
+deactivate
+source venv/bin/activate
+pip install -r requirements.txt
+python3 efeuno.py
+```
+
+Si el proyecto no tiene todavía una carpeta `venv/`, seguí los pasos de [Instalación](#instalación) para crearla.
+
+## Tests
+
+El proyecto tiene tests unitarios (sin dependencias externas, usan `unittest.mock` para no llamar a la API real):
+
+```bash
+source venv/bin/activate
+python3 -m unittest discover -s tests
+```

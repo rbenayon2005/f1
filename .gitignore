@@ -1,5 +1,8 @@
 venv/
+.venv/
 __pycache__/
+.pytest_cache/
+.claude/
 *.py[cod]
 *$py.class
 *.so
