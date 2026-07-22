@@ -64,6 +64,18 @@ python3 efeuno.py "imola" 1999
 
 La búsqueda no distingue mayúsculas/minúsculas y admite coincidencias parciales.
 
+### Historial de ganadores de un circuito
+
+Pasando el nombre de un circuito (id, nombre, localidad o país) y `all` como segundo parámetro, muestra el ganador de cada año que se corrió en ese circuito a lo largo de toda la historia.
+
+```bash
+source venv/bin/activate
+python3 efeuno.py hungaroring all
+python3 efeuno.py silverstone all
+```
+
+Si la búsqueda coincide con más de un circuito, se listan las coincidencias para repetir la búsqueda con un dato más específico.
+
 ### Posiciones de un piloto
 
 Si el primer parámetro no coincide con ningún circuito, se interpreta como el nombre o apellido de un piloto y se muestran sus resultados carrera por carrera.
@@ -89,6 +101,17 @@ Para cada carrera se listan los pilotos ordenados por posición final, con:
 - **Escudería**: equipo
 - **Salida**: posición de largada
 - **Cambio**: variación de posiciones entre la largada y la llegada (▲ subió, ▼ bajó, `=` sin cambios)
+
+## Qué muestra el historial de ganadores de un circuito
+
+Para cada año que se corrió en el circuito se lista, ordenado por temporada:
+
+- **Año**: temporada
+- **Gran Premio**: nombre de la carrera
+- **Fecha**: fecha de la carrera
+- **Ganador**: nombre completo del piloto ganador
+- **Escudería**: equipo del ganador
+- **Vuelta rápida**: mejor tiempo de vuelta del ganador en esa carrera (la API solo tiene este dato desde 2004 en adelante; en años anteriores se muestra `-`)
 
 ## Qué muestra la búsqueda de un piloto
 

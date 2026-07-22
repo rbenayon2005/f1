@@ -229,6 +229,91 @@ def obtener_resultados_piloto(driver_id, year=None):
     return df.reset_index(drop=True)
 
 
+def buscar_circuitos(query):
+    """Busca circuitos cuyo id, nombre, localidad o país coincidan (parcial, sin mayúsculas) con la consulta.
+
+    Devuelve una lista de dicts: [{circuitId, circuitName, locality, country}].
+    """
+    consulta = query.lower()
+    circuitos = obtener_json_paginado("/circuits", "CircuitTable", "Circuits")
+
+    coincidencias = []
+    for c in circuitos:
+        circuit_id = c.get("circuitId", "")
+        circuit_name = c.get("circuitName", "")
+        location = c.get("Location", {})
+        locality = location.get("locality", "")
+        country = location.get("country", "")
+        campos = [circuit_id, circuit_name, locality, country]
+        if any(consulta in campo.lower() for campo in campos if campo):
+            coincidencias.append(
+                {
+                    "circuitId": circuit_id,
+                    "circuitName": circuit_name,
+                    "locality": locality,
+                    "country": country,
+                }
+            )
+    return coincidencias
+
+
+def obtener_historial_circuito(circuit_id):
+    """Devuelve un DataFrame con el ganador de cada año que se corrió en el circuito dado."""
+    races = obtener_json_paginado(f"/circuits/{circuit_id}/results/1", "RaceTable", "Races")
+    if not races:
+        raise Exception(f"No se encontraron carreras para el circuito '{circuit_id}'")
+
+    filas = []
+    for race in races:
+        resultado = race.get("Results", [{}])[0]
+        driver = resultado.get("Driver", {})
+        constructor = resultado.get("Constructor", {})
+        vuelta_rapida = resultado.get("FastestLap", {}).get("Time", {}).get("time", "")
+        filas.append(
+            {
+                "season": race.get("season"),
+                "raceName": race.get("raceName"),
+                "date": race.get("date"),
+                "ganador": f"{driver.get('givenName', '')} {driver.get('familyName', '')}".strip(),
+                "team": constructor.get("name", ""),
+                "vuelta_rapida": vuelta_rapida,
+            }
+        )
+
+    df = pd.DataFrame(filas)
+    df["season"] = pd.to_numeric(df["season"], errors="coerce")
+    df["date"] = pd.to_datetime(df["date"], errors="coerce")
+    df.sort_values("season", inplace=True)
+    return df.reset_index(drop=True)
+
+
+def mostrar_coincidencias_circuito(circuitos, consulta):
+    print(f"Se encontraron varios circuitos que coinciden con '{consulta}':")
+    for c in circuitos:
+        print(f"  - {c['circuitName']} ({c['locality']}, {c['country']}) [{c['circuitId']}]")
+    print("\nEspecificá mejor el nombre para elegir un circuito.")
+
+
+def mostrar_historial_circuito(df_historial, circuito):
+    nombre = circuito.get("circuitName") or circuito.get("circuitId")
+    print(f"Historial de ganadores en {nombre}:")
+    print(f"{'Año':<6}{'Gran Premio':<28}{'Fecha':<12}{'Ganador':<24}{'Escudería':<16}{'Vuelta rápida':<14}")
+    for _, row in df_historial.iterrows():
+        fecha = row["date"].strftime("%Y-%m-%d") if pd.notna(row["date"]) else ""
+        gp_name = row["raceName"]
+        if len(gp_name) > 28:
+            gp_name = gp_name[:25] + "..."
+        vuelta_rapida = row["vuelta_rapida"] or "-"
+        print(
+            f"{int(row['season']):<6}"
+            f"{gp_name:<28}"
+            f"{fecha:<12}"
+            f"{row['ganador']:<24}"
+            f"{row['team']:<16}"
+            f"{vuelta_rapida:<14}"
+        )
+
+
 def mostrar_coincidencias_piloto(pilotos, consulta):
     print(f"Se encontraron varios pilotos que coinciden con '{consulta}':")
     for p in pilotos:
@@ -294,7 +379,16 @@ def main():
     carrera_encontrada = None
     year_para_circuito = None
 
-    if not todas_temporadas:
+    if todas_temporadas:
+        circuitos = buscar_circuitos(argumento)
+        if len(circuitos) == 1:
+            df_historial = obtener_historial_circuito(circuitos[0]["circuitId"])
+            mostrar_historial_circuito(df_historial, circuitos[0])
+            return
+        if len(circuitos) > 1:
+            mostrar_coincidencias_circuito(circuitos, argumento)
+            return
+    else:
         year_para_circuito = parsear_year(year_arg, year_actual)
         try:
             df_temporada = obtener_temporada(year_para_circuito)
